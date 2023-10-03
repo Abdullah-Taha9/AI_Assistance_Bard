@@ -1,17 +1,15 @@
-# Python Program (Speech to text and text to speech) using Google Bard
-# Indepedndies
+from google.generativeai.types.discuss_types import MESSAGE_PROMPT_KEYS
+import pprint
+import google.generativeai as palm
 import speech_recognition as sr
 import pyttsx3
-import os
-from dotenv import load_dotenv
-from bardapi import Bard
-load_dotenv()
-BARD_KEY = os.getenv('BARDKEY')
-os.environ["_BARD_API_KEY"] = BARD_KEY
 
+palm.configure(api_key='AIzaSyAtnB8dLGMDkw39d_qxlkowjeEMw1hoK58')
 
+models = [m for m in palm.list_models() if 'generateText' in m.supported_generation_methods]
+model = models[0].name
+print(model)
 
-#Function to convert text to speech
 def SpeakText(command):
     
     #Initialize the engine
@@ -50,44 +48,40 @@ def record_text():
         except sr.UnknownValueError:
             print("unkown error occured")
 
+messages = "I will ask you some qustions, please respond with no more than 10 words"
 
-def send_to_chatGPT(messages, model="gpt-3.5-turbo"):
+def send_to_bard(messages):
 
-    response = openai.ChatCompletion.create(
+  completion = palm.generate_text(
+      model=model,
+      prompt=messages,
+      temperature=0,
+      # The maximum length of the response
+      max_output_tokens=100,
+  )
+  response_text = completion.result
+  return response_text
 
-        # specify chat gpt model
-        model = model,
-
-        #the messages array (the full context of the conversation)
-        messages = messages,
-        
-        # How long we want the messages to be (response from gpt) in characters
-        max_tokens = 100,
-
-        #Deafualts
-        n=1,
-        stop=None,
-        temprature=0.5,
-    )
-
-    #getting the generated text by chatgpt and store it in message
-    message = response.choices[0].message.content
-    messages.append(response.choices[0].message) #update the messages array
-    return message
-
-
-messages = []
+# messages = "Hi engineer Abdullah Taha, I am tasker, your virtual assistance, how can I help you"
 
 while(1): #infinite loop
+    
 
     #This funcion convert the microphon audio and return the a text version from this audio in a form of string
     text = record_text()
+    # if "quit" in text:
+    #     break
+    if text.find('quit') != -1: break
 
     #append the text recieved to the as a dictionary, to keep track of the whole conversation when talk again and respond accordingly
     # "role" is to identifiy who said that text
-    messages.append({"role": "user", "content": text})
+    messages = text
+    print(text)
+    
     
     #send message to chatGPT, and recive the response from chatgpt and convert it to audio
-    response = send_to_chatGPT(messages)
+    response = send_to_bard(messages)
     SpeakText(response) #speak the text back to user
     print(response)
+
+    

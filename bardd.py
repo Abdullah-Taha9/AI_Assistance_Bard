@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from bardapi import Bard
 load_dotenv()
 BARD_KEY = os.getenv('BARDKEY')
-os.environ["_BARD_API_KEY"] = BARD_KEY
+os.environ["_BARD_API_KEY"] = 'bgjtNLLJ_LS5vgu0myOd9rUip29SRbY9eGeU6c33DZrftrhh7GvkRZzydePHNOgrnkIxpw.'
 
 
 
@@ -51,43 +51,50 @@ def record_text():
             print("unkown error occured")
 
 
-def send_to_chatGPT(messages, model="gpt-3.5-turbo"):
+def send_to_bard(messages):
 
-    response = openai.ChatCompletion.create(
+  """Sends a message to Bard and returns the response.
 
-        # specify chat gpt model
-        model = model,
+  Args:
+    messages: A list of messages that make up the conversation context.
 
-        #the messages array (the full context of the conversation)
-        messages = messages,
-        
-        # How long we want the messages to be (response from gpt) in characters
-        max_tokens = 100,
+  Returns:
+    A string containing the response from Bard.
+  """
 
-        #Deafualts
-        n=1,
-        stop=None,
-        temprature=0.5,
-    )
+  # Create a BardAPI object.
+  bard_api = Bard()
 
-    #getting the generated text by chatgpt and store it in message
-    message = response.choices[0].message.content
-    messages.append(response.choices[0].message) #update the messages array
-    return message
+#   import pdb
+#   pdb.set_trace()
 
 
-messages = []
+  # Query Bard with the given messages.
+  response = bard_api.get_answer(messages)['content']
+
+  # Get the response text.
+  response_text = response
+
+  # Return the response text.
+  return response_text
+
+
+messages = "Hi engineer Abdullah Taha, I am tasker, your virtual assistance, how can I help you"
 
 while(1): #infinite loop
 
     #This funcion convert the microphon audio and return the a text version from this audio in a form of string
     text = record_text()
+    # if "quit" in text:
+    #     break
+    if text.find('quit') != -1: break
 
     #append the text recieved to the as a dictionary, to keep track of the whole conversation when talk again and respond accordingly
     # "role" is to identifiy who said that text
-    messages.append({"role": "user", "content": text})
+    messages = text
+    print(text)
     
     #send message to chatGPT, and recive the response from chatgpt and convert it to audio
-    response = send_to_chatGPT(messages)
+    response = send_to_bard(messages)
     SpeakText(response) #speak the text back to user
     print(response)
