@@ -8,7 +8,7 @@ from bardapi import Bard
 import requests
 load_dotenv()
 BARD_KEY = os.getenv('BARDKEY')
-os.environ["_BARD_API_KEY"] = 'bgjtNLLJ_LS5vgu0myOd9rUip29SRbY9eGeU6c33DZrftrhh7GvkRZzydePHNOgrnkIxpw.'
+os.environ["_BARD_API_KEY"] = BARD_KEY
 session = requests.Session()
 session.headers = {
             "Host": "bard.google.com",
