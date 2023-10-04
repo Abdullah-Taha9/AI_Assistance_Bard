@@ -8,7 +8,7 @@ from bardapi import Bard
 import requests
 load_dotenv()
 BARD_KEY = os.getenv('BARDKEY')
-os.environ["_BARD_API_KEY"] = 'your_api'
+os.environ["_BARD_API_KEY"] = 'bgjtNLLJ_LS5vgu0myOd9rUip29SRbY9eGeU6c33DZrftrhh7GvkRZzydePHNOgrnkIxpw.'
 session = requests.Session()
 session.headers = {
             "Host": "bard.google.com",
@@ -93,15 +93,20 @@ def send_to_bard(messages):
   return response_text
 
 
-messages = "Hi engineer Abdullah Taha, I am tasker, your virtual assistance, how can I help you"
+messages = "Hi, Act like you are my virtual assistance. If you understand, say only (Hi engineer Abdullah, I am tasker, your virtual assistance, How can I help you today)"
 
 while(1): #infinite loop
 
+    response = send_to_bard(messages)
+    if response.find('*'):
+        response = response.replace('*', '')
+    SpeakText(response)
+    print(response)
     #This funcion convert the microphon audio and return the a text version from this audio in a form of string
     text = record_text()
     # if "quit" in text:
     #     break
-    if text.find('quit') != -1: break
+    if text.find('sleep') != -1: break
 
     #append the text recieved to the as a dictionary, to keep track of the whole conversation when talk again and respond accordingly
     # "role" is to identifiy who said that text
@@ -109,6 +114,6 @@ while(1): #infinite loop
     print(messages)
     
     #send message to chatGPT, and recive the response from chatgpt and convert it to audio
-    response = send_to_bard(messages)
-    SpeakText(response) #speak the text back to user
-    print(response)
+    
+    #speak the text back to user
+    
