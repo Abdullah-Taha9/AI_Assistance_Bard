@@ -3,8 +3,9 @@ import pprint
 import google.generativeai as palm
 import speech_recognition as sr
 import pyttsx3
-
-palm.configure(api_key='AIzaSyAtnB8dLGMDkw39d_qxlkowjeEMw1hoK58')
+import os
+PALM_KEY = os.getenv('PALMKEY')
+palm.configure(api_key=PALM_KEY)
 
 models = [m for m in palm.list_models() if 'generateText' in m.supported_generation_methods]
 model = models[0].name

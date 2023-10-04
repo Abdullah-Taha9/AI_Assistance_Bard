@@ -5,6 +5,7 @@ import pyttsx3
 import os
 from dotenv import load_dotenv
 from bardapi import Bard
+import openai
 load_dotenv()
 BARD_KEY = os.getenv('BARDKEY')
 os.environ["_BARD_API_KEY"] = BARD_KEY
