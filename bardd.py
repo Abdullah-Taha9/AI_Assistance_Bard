@@ -5,9 +5,23 @@ import pyttsx3
 import os
 from dotenv import load_dotenv
 from bardapi import Bard
+import requests
 load_dotenv()
 BARD_KEY = os.getenv('BARDKEY')
 os.environ["_BARD_API_KEY"] = 'bgjtNLLJ_LS5vgu0myOd9rUip29SRbY9eGeU6c33DZrftrhh7GvkRZzydePHNOgrnkIxpw.'
+session = requests.Session()
+session.headers = {
+            "Host": "bard.google.com",
+            "X-Same-Domain": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Origin": "https://bard.google.com",
+            "Referer": "https://bard.google.com/",
+        }
+session.cookies.set("__Secure-1PSID", os.getenv("_BARD_API_KEY")) 
+# session.cookies.set("__Secure-1PSID", token) 
+
+bard = Bard(session=session, timeout=30)
 
 
 
@@ -63,14 +77,14 @@ def send_to_bard(messages):
   """
 
   # Create a BardAPI object.
-  bard_api = Bard()
+#   bard_api = Bard()
 
 #   import pdb
 #   pdb.set_trace()
 
 
   # Query Bard with the given messages.
-  response = bard_api.get_answer(messages)['content']
+  response = bard.get_answer(messages)['content']
 
   # Get the response text.
   response_text = response
@@ -91,8 +105,8 @@ while(1): #infinite loop
 
     #append the text recieved to the as a dictionary, to keep track of the whole conversation when talk again and respond accordingly
     # "role" is to identifiy who said that text
-    messages = text
-    print(text)
+    messages = text + "(only give a very brief answer)"
+    print(messages)
     
     #send message to chatGPT, and recive the response from chatgpt and convert it to audio
     response = send_to_bard(messages)

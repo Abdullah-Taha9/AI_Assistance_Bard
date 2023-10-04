@@ -48,7 +48,7 @@ def record_text():
         except sr.UnknownValueError:
             print("unkown error occured")
 
-messages = "I will ask you some qustions, please respond with no more than 10 words"
+messages = ""
 
 def send_to_bard(messages):
 
@@ -75,8 +75,8 @@ while(1): #infinite loop
 
     #append the text recieved to the as a dictionary, to keep track of the whole conversation when talk again and respond accordingly
     # "role" is to identifiy who said that text
-    messages = text
-    print(text)
+    messages = text + " (Keep the answer not more than 20 words)"
+    print(messages)
     
     
     #send message to chatGPT, and recive the response from chatgpt and convert it to audio
